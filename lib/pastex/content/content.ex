@@ -52,6 +52,8 @@ defmodule Pastex.Content do
 
   """
   def create_paste(attrs \\ %{}) do
+    # There is probably a better way to also 
+    # do nested file associations
     %Paste{}
     |> Paste.changeset(attrs)
     |> Repo.insert()

@@ -17,6 +17,18 @@ defmodule PastexWeb.ContentResolver do
     {:ok, files}
   end
 
+  ## Mutations
+
+  def create_paste(_, %{input: input}, _) do
+    case Content.create_paste(input) do
+      {:ok, paste} ->
+        {:ok, paste}
+
+      {:error, _} ->
+        {:error, "Ain't work"}
+    end
+  end
+
   def format_body(file, arguments, _) do
     IO.inspect(arguments)
     case arguments do

@@ -6,6 +6,7 @@ defmodule PastexWeb.Schema.ContentTypes do
   # This shows in the UI/docs
   @desc "Blobs of pasted code"
   object :paste do
+    field :id, non_null(:id) # It is conventional to treat ids as opaque
     field :name, non_null(:string) # You will never get a paste where the name is null
     field :description, :string
     @desc "A paste can contain multiple files"
@@ -28,6 +29,39 @@ defmodule PastexWeb.Schema.ContentTypes do
     field :paste, non_null(:paste) do
       resolve &ContentResolver.get_paste/3
     end
+  end
+
+  # This is a "dummy object" that we use to hold fields
+  # and import using import_fields in schema.ex
+  object :content_queries do
+    field :health, :string do
+      resolve(fn _, _, _ ->
+        IO.puts "Executing health"
+        {:ok, "up"}
+      end)
+    end
+
+    field :pastes, list_of(:paste) do
+      resolve &ContentResolver.list_pastes/3
+    end
+  end
+
+  object :content_mutations do
+    field :create_paste, :paste do
+      arg :input, non_null(:create_paste_input)
+      resolve &ContentResolver.create_paste/3
+    end
+  end
+
+  input_object :create_paste_input do
+    field :name, non_null(:string)
+    field :description, :string
+    field :files, non_null(list_of(non_null(:file_input)))
+  end
+
+  input_object :file_input do
+    field :name, :string
+    field :body, :string
   end
 
   # Allows deprecation of options

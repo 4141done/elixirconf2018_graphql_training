@@ -6,15 +6,10 @@ defmodule PastexWeb.Schema do
 
   @desc "This winds up in the description field as the RootQueryType"
   query do
-    field :health, :string do
-      resolve(fn _, _, _ ->
-        IO.puts "Executing health"
-        {:ok, "up"}
-      end)
-    end
+    import_fields :content_queries
+  end
 
-    field :pastes, list_of(:paste) do
-      resolve &ContentResolver.list_pastes/3
-    end
+  mutation do
+    import_fields :content_mutations
   end
 end
