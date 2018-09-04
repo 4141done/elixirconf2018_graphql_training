@@ -1,5 +1,7 @@
 defmodule PastexWeb.Endpoint do
   use Phoenix.Endpoint, otp_app: :pastex
+  # Allows our endpoint to work as a valid adapter for Absinthe Subscriptions
+  use Absinthe.Phoenix.Endpoint
 
   socket("/socket", PastexWeb.UserSocket)
 

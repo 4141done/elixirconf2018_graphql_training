@@ -11,9 +11,9 @@ defmodule Pastex.Application do
       # Start the Ecto repository
       supervisor(Pastex.Repo, []),
       # Start the endpoint when the application starts
-      supervisor(PastexWeb.Endpoint, [])
-      # Start your own worker by calling: Pastex.Worker.start_link(arg1, arg2, arg3)
-      # worker(Pastex.Worker, [arg1, arg2, arg3]),
+      supervisor(PastexWeb.Endpoint, []),
+      # Absinthe Subscriptions with our phx endpoint
+      supervisor(Absinthe.Subscription, [PastexWeb.Endpoint])
     ]
 
     # See https://hexdocs.pm/elixir/Supervisor.html
