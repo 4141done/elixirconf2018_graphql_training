@@ -29,6 +29,8 @@ defmodule PastexWeb.ContentResolver do
     end
   end
 
+  ## Subscriptions
+
   def format_body(file, arguments, _) do
     IO.inspect(arguments)
     case arguments do

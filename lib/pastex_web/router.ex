@@ -14,7 +14,8 @@ defmodule PastexWeb.Router do
       Absinthe.Plug.GraphiQL,
       schema: PastexWeb.Schema,
       # In da future this will be the default
-      interface: :playground
+      interface: :playground,
+      socket: PastexWeb.UserSocket
     )
   end
 end
