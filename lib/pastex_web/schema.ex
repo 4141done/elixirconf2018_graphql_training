@@ -7,6 +7,7 @@ defmodule PastexWeb.Schema do
   @desc "This winds up in the description field as the RootQueryType"
   query do
     import_fields :content_queries
+    import_fields :identity_queries
   end
 
   mutation do
