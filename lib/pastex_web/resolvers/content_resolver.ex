@@ -5,10 +5,8 @@ defmodule PastexWeb.ContentResolver do
   alias Pastex.Content
 
   def list_pastes(_, args, %{context: context}) do
-    limit = min(max(args[:limit] || 25, 0), 25)
-    offset = max(args[:offset] || 0, 0)
-    pastes = Content.list_pastes(context[:current_user], limit: limit, offset: offset)
-    {:ok, pastes}
+    query = Content.query_pastes(context[:current_user])
+    Absinthe.Relay.Connection.from_query(query, &Pastex.Repo.all/1, args) |> IO.inspect()
   end
 
   def get_files(paste, _, _) do

@@ -1,5 +1,6 @@
 defmodule PastexWeb.Schema.ContentTypes do
   use Absinthe.Schema.Notation
+  use Absinthe.Relay.Schema.Notation, :modern
 
   alias PastexWeb.ContentResolver
   # Query, Mutation, Subscription must be in schema.ex
@@ -48,6 +49,8 @@ defmodule PastexWeb.Schema.ContentTypes do
     end
   end
 
+  connection(node_type: :paste)
+
   # This is a "dummy object" that we use to hold fields
   # and import using import_fields in schema.ex
   object :content_queries do
@@ -58,9 +61,7 @@ defmodule PastexWeb.Schema.ContentTypes do
       end)
     end
 
-    field :pastes, list_of(:paste) do
-      arg :limit, :integer, default_value: 25
-      arg :offset, :integer, default_value: 0
+    connection field :pastes, node_type: :paste do
       resolve &ContentResolver.list_pastes/3
     end
   end
