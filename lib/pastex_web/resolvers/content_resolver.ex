@@ -19,8 +19,16 @@ defmodule PastexWeb.ContentResolver do
 
   ## Mutations
 
-  def create_paste(_, %{input: input}, _) do
-    case Content.create_paste(input) do
+  def create_paste(_, %{input: input}, %{context: context}) do
+    input_with_author = case context do
+      %{current_user: %{id: id}} ->
+        Map.put(input, :author_id, id)
+
+      _ ->
+        input
+    end
+
+    case Content.create_paste(input_with_author) do
       {:ok, paste} ->
         {:ok, paste}
 
