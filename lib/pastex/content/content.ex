@@ -17,10 +17,24 @@ defmodule Pastex.Content do
       [%Paste{}, ...]
 
   """
-  def list_pastes do
+  def list_pastes(current_user) do
     Paste
     |> order_by(desc: :inserted_at)
+    |> include_public_pastes()
+    |> scope_to_user(current_user)
     |> Repo.all()
+  end
+
+  def scope_to_user(query, %{id: user_id}) do
+    query
+    |> or_where([p], p.author_id == ^user_id)
+  end
+
+  def scope_to_user(query, _), do: query
+
+  def include_public_pastes(query) do
+    query
+    |> where([p], p.visibility == "public")
   end
 
   @doc """

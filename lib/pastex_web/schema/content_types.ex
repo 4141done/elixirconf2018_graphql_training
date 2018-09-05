@@ -11,7 +11,17 @@ defmodule PastexWeb.Schema.ContentTypes do
     # You will never get a paste where the name is null
     field :name, non_null(:string)
     field :description, :string
-    field :author_id, :string
+
+    field :author, :user do
+      resolve fn
+        %{author_id: nil}, _, _ ->
+          {:ok, nil}
+
+        %{author_id: author_id}, _, _ ->
+          {:ok, Pastex.Identity.get_user(author_id)}
+      end
+    end
+
     @desc "A paste can contain multiple files"
     field :files, non_null(list_of(:file)) do
       resolve &ContentResolver.get_files/3
