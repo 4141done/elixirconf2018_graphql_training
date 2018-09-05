@@ -3,6 +3,19 @@ defmodule PastexWeb.Schema.ContentTypes do
   use Absinthe.Relay.Schema.Notation, :modern
 
   alias PastexWeb.ContentResolver
+
+  import Absinthe.Resolution.Helpers, only: [async: 1]
+
+  def get_author(%{author_id: nil}, _, _) do
+    {:ok, nil}
+  end
+
+  def get_author(%{author_id: user_id}, _, _ ) do
+    async(fn ->
+      {:ok, Pastex.Identity.get_user(user_id)}
+    end)
+    |> IO.inspect()
+  end
   # Query, Mutation, Subscription must be in schema.ex
   # This shows in the UI/docs
   @desc "Blobs of pasted code"
@@ -14,13 +27,9 @@ defmodule PastexWeb.Schema.ContentTypes do
     field :description, :string
 
     field :author, :user do
-      resolve fn
-        %{author_id: nil}, _, _ ->
-          {:ok, nil}
 
-        %{author_id: author_id}, _, _ ->
-          {:ok, Pastex.Identity.get_user(author_id)}
-      end
+      complexity 100
+      resolve &get_author/3
     end
 
     @desc "A paste can contain multiple files"
@@ -62,6 +71,13 @@ defmodule PastexWeb.Schema.ContentTypes do
     end
 
     connection field :pastes, node_type: :paste do
+      # Ha har this may or may not be a good idea.  For us right now with our
+      # n+1 it sort of makes sense.
+      # In this case ten items requested will throw out a too-complex thing but six or
+      # so may not
+      complexity fn args, child_complexity ->
+        child_complexity * (args[:first] || args[:last])
+      end
       resolve &ContentResolver.list_pastes/3
     end
   end

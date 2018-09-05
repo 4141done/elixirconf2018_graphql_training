@@ -11,7 +11,9 @@ defmodule PastexWeb.Router do
 
     forward("/api", Absinthe.Plug,
       schema: PastexWeb.Schema,
-      pipeline: {ApolloTracing.Pipeline, :plug}
+      pipeline: {ApolloTracing.Pipeline, :plug},
+      analyze_complexity: true,
+      max_complexity: 1_000
     )
 
     # This is for the GUI playground
@@ -22,7 +24,9 @@ defmodule PastexWeb.Router do
       # In da future this will be the default
       interface: :playground,
       socket: PastexWeb.UserSocket,
-      pipeline: {ApolloTracing.Pipeline, :plug}
+      pipeline: {ApolloTracing.Pipeline, :plug},
+      analyze_complexity: true,
+      max_complexity: 1_000
     )
   end
 end
