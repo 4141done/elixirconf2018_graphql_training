@@ -42,7 +42,10 @@ defmodule Pastex.Mixfile do
       {:absinthe_relay, "~> 1.4"},
       {:postgrex, ">= 0.0.0"},
       {:gettext, "~> 0.11"},
-      {:cowboy, "~> 1.0"}
+      {:cowboy, "~> 1.0"},
+      {:observer_cli, "~> 1.3"},
+      {:comeonin_ecto_password, "~> 2.1"},
+      {:pbkdf2_elixir, "~> 0.12.0"}
     ]
   end
 

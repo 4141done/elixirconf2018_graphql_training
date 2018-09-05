@@ -1,19 +1,41 @@
-# Note: These need to be idempotent so we can run them automatically
-# when running docker-compose.
+alias Pastex.{Repo, Content, Identity}
 
-alias Pastex.{Repo, Content}
+users = [
+  %{
+    name: "Ben Wilson",
+    email: "ben@localhost.com",
+    password: "abc123"
+  },
+  %{
+    name: "Rich Kilmer",
+    email: "rich@localhost.com",
+    password: "abc123"
+  }
+]
+
+[user1, user2] =
+  Enum.map(users, fn params ->
+    {:ok, user} = params |> Identity.create_user()
+    user
+  end)
 
 pastes = [
   %Content.Paste{
     name: "Hello World"
   },
   %Content.Paste{
+    author_id: user1.id,
     name: "Help!",
     description: "I don't know what I'm doing!"
+  },
+  %Content.Paste{
+    author_id: user1.id,
+    name: "Just for me",
+    visibility: "private"
   }
 ]
 
-[past1, past2] =
+[past1, past2, past3] =
   for paste <- pastes do
     Repo.insert!(paste)
   end
@@ -39,6 +61,13 @@ files = [
     defmodule Bar do
       def bar, do: Foo.foo
     end
+    """
+  },
+  %Content.File{
+    paste_id: past3.id,
+    name: "foo.ex",
+    body: """
+    IO.puts("this is secret")
     """
   }
 ]

@@ -6,8 +6,10 @@ defmodule PastexWeb.Schema.ContentTypes do
   # This shows in the UI/docs
   @desc "Blobs of pasted code"
   object :paste do
-    field :id, non_null(:id) # It is conventional to treat ids as opaque
-    field :name, non_null(:string) # You will never get a paste where the name is null
+    # It is conventional to treat ids as opaque
+    field :id, non_null(:id)
+    # You will never get a paste where the name is null
+    field :name, non_null(:string)
     field :description, :string
     @desc "A paste can contain multiple files"
     field :files, non_null(list_of(:file)) do
@@ -16,15 +18,19 @@ defmodule PastexWeb.Schema.ContentTypes do
   end
 
   object :file do
+    field :id, non_null(:id)
+
     field :name, :string do
       resolve fn file, _, _ ->
         {:ok, Map.get(file, :name) || "Untitled"}
       end
     end
+
     field :body, :string do
       arg :style, :body_style, default_value: :original
       resolve &ContentResolver.format_body/3
     end
+
     # Refer back to the parent
     field :paste, non_null(:paste) do
       resolve &ContentResolver.get_paste/3
@@ -36,7 +42,7 @@ defmodule PastexWeb.Schema.ContentTypes do
   object :content_queries do
     field :health, :string do
       resolve(fn _, _, _ ->
-        IO.puts "Executing health"
+        IO.puts("Executing health")
         {:ok, "up"}
       end)
     end

@@ -33,10 +33,11 @@ defmodule PastexWeb.ContentResolver do
 
   def format_body(file, arguments, _) do
     IO.inspect(arguments)
+
     case arguments do
       # We can do this because we defined an enum
       %{style: :formatted} ->
-        IO.puts "Formatting code"
+        IO.puts("Formatting code")
         {:ok, "SO FORMATTED #{Code.format_string!(file.body)}"}
 
       _ ->

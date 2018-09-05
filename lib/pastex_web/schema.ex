@@ -2,7 +2,7 @@ defmodule PastexWeb.Schema do
   use Absinthe.Schema
   alias PastexWeb.ContentResolver
 
-  import_types PastexWeb.Schema.ContentTypes
+  import_types PastexWeb.Schema.{ContentTypes, IdentityTypes}
 
   @desc "This winds up in the description field as the RootQueryType"
   query do
@@ -11,6 +11,7 @@ defmodule PastexWeb.Schema do
 
   mutation do
     import_fields :content_mutations
+    import_fields :identity_mutations
   end
 
   # Subscriptions are stored in an ets table
@@ -20,9 +21,10 @@ defmodule PastexWeb.Schema do
         {:ok, topic: "*"}
       end
 
-      trigger [:create_paste], topic: fn _paste ->
-        "*"
-      end
+      trigger [:create_paste],
+        topic: fn _paste ->
+          "*"
+        end
     end
 
     # Basic updating based on listening for updates
@@ -34,9 +36,10 @@ defmodule PastexWeb.Schema do
         {:ok, topid: id}
       end
 
-      trigger :update_paste, topic: fn paste ->
-        paste.id
-      end
+      trigger :update_paste,
+        topic: fn paste ->
+          paste.id
+        end
     end
   end
 end
