@@ -27,20 +27,12 @@ defmodule PastexWeb.Schema.IdentityTypes do
 
   object :user do
     field :name, :string
-    # If this is null, then the null value will get pushed up to the first nullable
-    # parent object
-    field :email, non_null(:string) do
-      # This is an example of bad approach
-      resolve fn %{id: id} = user, _, %{context: context} ->
-        IO.inspect id
-        IO.inspect context[:current_user]
-        case context do
-          %{current_user: %{id: ^id}} ->
-            IO.puts "doing user email"
-            {:ok, user.email}
-          _ ->
-            IO.puts "should have returned error"
-            {:error, %{message: "unauthorized", code: 403}}
+    field :email, :string do
+      resolve fn user, _, %{context: context} ->
+        if Identity.authorized?(user, :email, context[:current_user]) do
+          {:ok, user.email}
+        else
+          {:error, "unauthorized"}
         end
       end
     end
