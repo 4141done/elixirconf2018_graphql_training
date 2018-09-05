@@ -13,7 +13,7 @@ defmodule PastexWeb.Router do
       schema: PastexWeb.Schema,
       pipeline: {ApolloTracing.Pipeline, :plug},
       analyze_complexity: true,
-      max_complexity: 1_000
+      max_complexity: 9_000
     )
 
     # This is for the GUI playground
@@ -26,7 +26,7 @@ defmodule PastexWeb.Router do
       socket: PastexWeb.UserSocket,
       pipeline: {ApolloTracing.Pipeline, :plug},
       analyze_complexity: true,
-      max_complexity: 1_000
+      max_complexity: 9_000
     )
   end
 end

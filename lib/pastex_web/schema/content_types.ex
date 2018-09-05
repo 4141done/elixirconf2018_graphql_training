@@ -4,17 +4,19 @@ defmodule PastexWeb.Schema.ContentTypes do
 
   alias PastexWeb.ContentResolver
 
-  import Absinthe.Resolution.Helpers, only: [async: 1]
+  import Absinthe.Resolution.Helpers, only: [batch: 3]
 
   def get_author(%{author_id: nil}, _, _) do
     {:ok, nil}
   end
 
   def get_author(%{author_id: user_id}, _, _ ) do
-    async(fn ->
-      {:ok, Pastex.Identity.get_user(user_id)}
+    # The second arg is the thing we want to add to the
+    # accumulator which will get passed to the function in the tuple
+    batch({Pastex.Identity, :get_users}, user_id, fn results ->
+      results |> IO.inspect(label: :inside_batch)
+      {:ok, Map.get(results, user_id)}
     end)
-    |> IO.inspect()
   end
   # Query, Mutation, Subscription must be in schema.ex
   # This shows in the UI/docs
