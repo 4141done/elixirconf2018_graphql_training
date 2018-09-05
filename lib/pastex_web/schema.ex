@@ -43,4 +43,20 @@ defmodule PastexWeb.Schema do
         end
     end
   end
+
+
+  # doing #use Absinthe.Schema causes this to get defined
+  # Could also match on the field via meta
+  # if Absinthe.Type.meta(field, :check_auth) do
+    # Add middlewhere here
+  # end
+  # You can also put metadata on the object inside the do block
+  def middleware(middleware, _field, %{identifier: :user}) do
+    # Now all of our auth checks are run before any field on the :user object.
+    # Additions to the authorized?/3
+    # function will be automatically checked
+    [PastexWeb.Middleware.AuthGet | middleware]
+  end
+
+  def middleware(middleware, _field, _object), do: middleware
 end

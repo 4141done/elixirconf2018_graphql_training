@@ -16,6 +16,7 @@ defmodule PastexWeb.Schema.IdentityTypes do
       arg :email, non_null(:string)
       arg :password, non_null(:string)
 
+      # Same as middleware Absinthe.Resolution, &create_session/3
       resolve &create_session/3
     end
   end
@@ -27,15 +28,7 @@ defmodule PastexWeb.Schema.IdentityTypes do
 
   object :user do
     field :name, :string
-    field :email, :string do
-      resolve fn user, _, %{context: context} ->
-        if Identity.authorized?(user, :email, context[:current_user]) do
-          {:ok, user.email}
-        else
-          {:error, "unauthorized"}
-        end
-      end
-    end
+    field :email, :string
   end
 
   # It's not a recommendation to do the resolver inline like this

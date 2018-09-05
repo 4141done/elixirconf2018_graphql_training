@@ -14,7 +14,7 @@ defmodule Pastex.Identity do
     true
   end
 
-  def authorized?(_, :email, _), do: false
+  def authorized?(%User{}, :email, _), do: false
 
   def authorized?(_, _,  _), do: true
 
