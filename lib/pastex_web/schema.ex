@@ -55,8 +55,10 @@ defmodule PastexWeb.Schema do
     # Now all of our auth checks are run before any field on the :user object.
     # Additions to the authorized?/3
     # function will be automatically checked
-    [PastexWeb.Middleware.AuthGet | middleware]
+    [ApolloTracing.Middleware.Tracing, PastexWeb.Middleware.AuthGet | middleware]
   end
 
-  def middleware(middleware, _field, _object), do: middleware
+  def middleware(middleware, _field, _object) do
+    [ApolloTracing.Middleware.Tracing | middleware]
+  end
 end

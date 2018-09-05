@@ -45,7 +45,8 @@ defmodule Pastex.Mixfile do
       {:cowboy, "~> 1.0"},
       {:observer_cli, "~> 1.3"},
       {:comeonin_ecto_password, "~> 2.1"},
-      {:pbkdf2_elixir, "~> 0.12.0"}
+      {:pbkdf2_elixir, "~> 0.12.0"},
+      {:apollo_tracing, "~> 0.4.0"},
     ]
   end
 

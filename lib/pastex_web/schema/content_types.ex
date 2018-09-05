@@ -59,6 +59,8 @@ defmodule PastexWeb.Schema.ContentTypes do
     end
 
     field :pastes, list_of(:paste) do
+      arg :limit, :integer, default_value: 25
+      arg :offset, :integer, default_value: 0
       resolve &ContentResolver.list_pastes/3
     end
   end

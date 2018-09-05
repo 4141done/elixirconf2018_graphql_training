@@ -9,6 +9,11 @@ defmodule PastexWeb.Router do
   scope "/" do
     pipe_through(:api)
 
+    forward("/api", Absinthe.Plug,
+      schema: PastexWeb.Schema,
+      pipeline: {ApolloTracing.Pipeline, :plug}
+    )
+
     # This is for the GUI playground
     forward(
       "/graphiql",
@@ -16,7 +21,8 @@ defmodule PastexWeb.Router do
       schema: PastexWeb.Schema,
       # In da future this will be the default
       interface: :playground,
-      socket: PastexWeb.UserSocket
+      socket: PastexWeb.UserSocket,
+      pipeline: {ApolloTracing.Pipeline, :plug}
     )
   end
 end
