@@ -9,13 +9,13 @@ defmodule PastexWeb.ContentResolver do
     Absinthe.Relay.Connection.from_query(query, &Pastex.Repo.all/1, args) |> IO.inspect()
   end
 
-  def get_files(paste, _, _) do
-    files =
-      paste
-      |> Ecto.assoc(:files)
-      |> Pastex.Repo.all()
-
-    {:ok, files}
+  def get_files(paste, _, %{context: %{loader: loader}}) do
+    loader
+    |> Dataloader.load(:content, {:many, Content.File}, paste_id: paste.id)
+    |> Absinthe.Resolution.Helpers.on_load(fn loader ->
+      files = Dataloader.get(loader, :content, {:many, Content.File}, paste_id: paste.id)
+      {:ok, files}
+    end)
   end
 
   ## Mutations

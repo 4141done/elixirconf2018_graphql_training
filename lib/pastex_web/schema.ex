@@ -44,6 +44,21 @@ defmodule PastexWeb.Schema do
     end
   end
 
+  alias PastexWeb.Middleware
+
+  # Bootstrap Absinthe context
+  def context(ctx) do
+    loader =
+      Dataloader.new
+      # Can call add_source many times with different (phoenix) contexts
+      |> Dataloader.add_source(:content, Pastex.Content.data())
+
+    Map.put(ctx, :loader, loader)
+  end
+
+  def plugins() do
+    [Absinthe.Middleware.Dataloader | Absinthe.Plugin.defaults()]
+  end
 
   # doing #use Absinthe.Schema causes this to get defined
   # Could also match on the field via meta

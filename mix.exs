@@ -47,6 +47,7 @@ defmodule Pastex.Mixfile do
       {:comeonin_ecto_password, "~> 2.1"},
       {:pbkdf2_elixir, "~> 0.12.0"},
       {:apollo_tracing, "~> 0.4.0"},
+      {:dataloader, "~> 1.0.3"},
     ]
   end
 
