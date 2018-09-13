@@ -10,6 +10,8 @@ defmodule PastexWeb.ContentResolver do
   end
 
   def get_files(paste, _, %{context: %{loader: loader}}) do
+    # Since thie references methods on the context,
+    # We won't be sidestepping our business logic
     loader
     |> Dataloader.load(:content, {:many, Content.File}, paste_id: paste.id)
     |> Absinthe.Resolution.Helpers.on_load(fn loader ->

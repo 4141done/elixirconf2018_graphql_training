@@ -12,6 +12,8 @@ defmodule Pastex.Content do
     Dataloader.Ecto.new(Repo, query: &query/2)
   end
 
+  # We can add to these with more function clauses
+  # to allow some flexibility can allow blanket things
   def query(queryable, _) do
     queryable
   end
